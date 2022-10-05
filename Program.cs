@@ -1,43 +1,61 @@
-﻿abstract class GeoObj
+﻿interface IGeoObj
 {
-    public static int x;
-    public static int y;
-    public static string name;
-    public static string description;
-    public GeoObj(int _x, int _y, string _name, string _description)
-    {
-        x = _x;
-        y = _y;
-        name = _name;
-        description = _description;
-    }
-    virtual public string GetInfo(int x, int y, string name, string description, int speed, int hight)
-    {
-        return "Coordinate X: " + x + "\n" + "Coordinate Y: " + y + "\n" + "Name: " + name + "\n" + "Description: " + description + "\n";
-    }
+    string GetInfo();
 }
-class River : GeoObj
+
+class River : IGeoObj
 {
+    private int x;
+    public int y;
+    public string name;
+    public string description;
     private int speed;
-    public River(int _speed) : base(x, y, name, description)
+
+    public River(int x, int y, string name, string description, int speed)
     {
-        speed = _speed;
-    } 
-    public override string GetInfo(int x, int y, string name, string description, int speed, int hight)
+        this.x = x;
+        this.y = y;
+        this.name = name;
+        this.description = description;
+        this.speed = speed;
+    }
+        
+    public string GetInfo(int x, int y, string name, string description, int speed)
     {
         return "Coordinate X: " + x + "\n" + "Coordinate Y: " + y + "\n" + "Name: " + name + "\n" + "Description: " + description + "\n" + "Flow speed: " + speed + "km/h";
     }
-}
-class Mountain : GeoObj
-{
-    private int hight;
-    public Mountain(int _hight) : base(x, y, name, description)
+
+    public string GetInfo()
     {
-        hight = _hight;
+        throw new NotImplementedException();
     }
-    public override string GetInfo(int x, int y, string name, string description, int speed, int hight)
+}
+
+class Mountain : IGeoObj
+{
+    private int x;
+    public int y;
+    public string name;
+    public string description;
+    private int hight;
+
+    public Mountain(int x, int y, string name, string description, int hight)
+    {
+        this.x = x;
+        this.y = y;
+        this.name = name;
+        this.description = description;
+        this.hight = hight;
+    }
+    
+    public string GetInfo(int x, int y, string name, string description, int hight)
     {
         return "Coordinate X: " + x + "\n" + "Coordinate Y: " + y + "\n" + "Name: " + name + "\n" + "Description: " + description + "\n" + "Mountain's highest spot: " + hight + "m";
+
+    }
+    public string GetInfo()
+    {
+        throw new NotImplementedException();
     }
 }
 
@@ -50,8 +68,8 @@ class Program
         string name;
         string description;
         string obj;
-        int speed = 0;
-        int hight = 0;
+        int speed;
+        int hight;
         int check;
         Console.WriteLine("Enter the coordinate X of the object");
         x = Convert.ToInt32(Console.ReadLine());
@@ -72,7 +90,7 @@ class Program
         {
             Console.WriteLine("Enter the flow speed");
             speed = Convert.ToInt32(Console.ReadLine());
-            River riv = new River(speed);
+            River riv = new River(x,y,name,description,speed);
             Console.WriteLine("Type 1 to get information about your object");
             check = Convert.ToInt32(Console.ReadLine());
             while (check != 1)
@@ -80,13 +98,13 @@ class Program
                 Console.WriteLine("Incorrect input. Try again");
                 check = Convert.ToInt32(Console.ReadLine());
             }
-            Console.WriteLine(riv.GetInfo(x, y, name, description, speed, hight));
+            Console.WriteLine(riv.GetInfo(x, y, name, description, speed));
             }
         else if (obj == "MOUNTAIN")
         {
             Console.WriteLine("Enter the highest spot of the mountain");
             hight = Convert.ToInt32(Console.ReadLine());
-            Mountain mount = new Mountain(hight);
+            Mountain mount = new Mountain(x,y, name, description, hight);
             Console.WriteLine("Type 1 to get information about your object");
             check = Convert.ToInt32(Console.ReadLine());
             while (check != 1)
@@ -94,7 +112,7 @@ class Program
                 Console.WriteLine("Incorrect input. Try again");
                 check = Convert.ToInt32(Console.ReadLine());
             }
-            Console.WriteLine(mount.GetInfo(x, y, name, description, speed, hight));
+            Console.WriteLine(mount.GetInfo(x, y, name, description, hight));
             }
     }
 }
